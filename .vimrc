@@ -145,8 +145,9 @@ au BufNewFile,BufRead *.js, *.html, *.css
 " 前端代码缩进
 
 " ==== Vundle ====
+filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+call vundle#begin('~/.vim/bundle')
 " 底部工具条
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -162,14 +163,15 @@ Plugin 'nvie/vim-flake8'
 Plugin 'tpope/vim-fugitive'
 " 搜索插件
 Plugin 'kien/ctrlp.vim'
+" 源码结构工具
+Plugin 'taglist.vim'
 Plugin 'Lokaltog/vim-powerline'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'tell-k/vim-autopep8' " 自动PEP8
 Plugin 'jiangmiao/auto-pairs' " 自动补全括号和引号等
 call vundle#end()
+filetype plugin indent on
 " ==== Vundle ====
-
- filetype plugin indent on
 
 " ==== themes ====
 set background=dark
@@ -201,4 +203,25 @@ let g:ctrlp_cmd = 'CtrlP'
 " 设置ctrlp的窗口位置
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:20'
 " ==== ctrlp ====
+
+" ==== tagslist ====
+" 让taglist窗口出现在Vim的左边边
+let Tlist_Use_Left_Window=1
+" 当同时显示多个文件中的tag时，设置为1，可使taglist只显示当前文件tag，其它文件的tag都被折叠起来。
+let Tlist_File_Fold_Auto_Close=1
+" 只显示一个文件中的tag，默认为显示多个
+let Tlist_Show_One_File=1
+" Tag的排序规则，以名字排序。默认是以在文件中出现的顺序排序
+let Tlist_Sort_Type='name'
+" Taglist窗口打开时，立刻切换为有焦点状态
+let Tlist_GainFocus_On_ToggleOpen=1
+" 如果taglist窗口是最后一个窗口，则退出vim
+let Tlist_Exit_OnlyWindow=1
+" 设置窗体宽度为32，可以根据自己喜好设置
+let Tlist_WinWidth=32
+" 这里比较重要了，设置ctags的位置，不是指向MacOS自带的那个，而是我们用homebrew安装的那个
+let Tlist_Ctags_Cmd='/usr/bin/ctags'
+" 热键设置，我设置成Leader+t来呼出和关闭Taglist
+map <F2> :TlistToggle<CR>
+" ==== tagslist ====
 
