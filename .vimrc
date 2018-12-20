@@ -1,5 +1,5 @@
 " Configuration file for vim
- 
+
 " ==== Base Settings ====
 " 不与Vi兼容(采用Vim自己的操作命令)
 set nocompatible
@@ -46,7 +46,7 @@ set scrolloff=7
 " 是否显示状态栏
 set laststatus=2
 " 在状态栏显示光标的当前位置
-set  ruler
+set ruler
 
 " Search Settings
 " 括号匹配高亮
@@ -55,10 +55,12 @@ set showmatch
 set hlsearch
 " 输入搜索时自动匹配
 set incsearch
+" 关闭搜索高亮
+nnoremap <leader><space> :nohlsearch<CR>
 
 " Edit Settings
 " 英文单词拼写检查
-set spell spelllang=en_us
+" set spell spelllang=en_us
 " 不创建备份
 set nobackup
 " 不创建交换文件
@@ -77,9 +79,12 @@ set list
 " 命令模式下，命令自动补全
 set wildmenu
 set wildmode=longest:list,full
+" Enable folding with the spacebar
+nnoremap <space> za
+" 标示不必要的空白字符
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 
 set backspace=indent,eol,start
-"set ruler " 打开状态栏标尺
 set magic " 设置魔术
 " 折叠
 set foldmethod=indent
@@ -101,54 +106,28 @@ set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
 " How many tenths of a second to blink when matching brackets
 set matchtime=2
+" ==== Base Settings ====
 
+" ==== 多语言 ====
+set termencoding=utf-8
+set formatoptions+=mM
+set fencs=utf-8,gbk
 
- " ==== 多语言 ==== 
- set termencoding=utf-8
- set formatoptions+=mM      
- set fencs=utf-8,gbk
- 
- " ==== Vundle ====         
- set rtp+=~/.vim/bundle/Vundle.vim
- call vundle#begin()
- Plugin 'vim-airline/vim-airline'
- Plugin 'vim-airline/vim-airline-themes'
- Plugin 'git://github.com/scrooloose/nerdtree.git'
- Plugin 'Valloric/YouCompleteMe'
- Plugin 'vim-scripts/indentpython.vim'
- Plugin 'vim-syntastic/syntastic'
- Plugin 'nvie/vim-flake8'
- Plugin 'Lokaltog/vim-powerline'
- Plugin 'tell-k/vim-autopep8' " 自动PEP8
- Plugin 'jiangmiao/auto-pairs' " 自动补全括号和引号等
- Plugin 'kien/ctrlp.vim'
- Plugin 'tpope/vim-fugitive'
- call vundle#end()
- 
- autocmd vimenter * NERDTree
- 
- filetype plugin indent on
- 
- " ==== themes ====
- set background=dark
- "colorscheme solarized
- colorscheme molokai
- 
- map <C-n> :NERDTreeToggle<CR>
- let g:NERDTreeDirArrowExpandable = '▸'
- let g:NERDTreeDirArrowCollapsible = '▾'
+" ==== Python Settings ====
+let python_highlight_all=1
 
- " ==== YCM ====
- let g:ycm_min_num_of_chars_for_completion = 2  "开始补全的字符数"
- let g:ycm_python_binary_path = 'python'  "jedi模块所在python解释器路径"
- let g:ycm_seed_identifiers_with_syntax = 1  "开启使用语言的一些关键字查询"
- let g:ycm_autoclose_preview_window_after_completion=1 "补全后自动关闭预览窗口"
- let g:ycm_auto_trigger = 1   "turn on
- 
- nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
- 
- autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
- 
+" 代码缩进
+au BufNewFile,BufRead *.py
+            \ set tabstop=4
+            \ set softtabstop=4
+            \ set shiftwidth=4
+            \ set textwidth=79
+            \ set expandtab
+            \ set autoindent
+            \ set fileformat=unix
+
+autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
+
  map <F5> :call RunPython()<CR>
  func! RunPython()
      exec "W"
@@ -156,4 +135,70 @@ set matchtime=2
          exec "!time python2.7 %"
      endif
  endfunc
+" ==== Python Settings ====
+
+" 前端代码缩进
+au BufNewFile,BufRead *.js, *.html, *.css
+            \ set tabstop=2
+            \ set softtabstop=2
+            \ set shiftwidth=2
+" 前端代码缩进
+
+" ==== Vundle ====
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" 底部工具条
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+" 目前最强自动补全
+Plugin 'Valloric/YouCompleteMe'
+" 文件浏览
+Plugin 'scrooloose/nerdtree'
+" 语法检查
+Plugin 'scrooloose/syntastic'
+" PEP8风格检查
+Plugin 'nvie/vim-flake8'
+" Git集成
+Plugin 'tpope/vim-fugitive'
+" 搜索插件
+Plugin 'kien/ctrlp.vim'
+Plugin 'Lokaltog/vim-powerline'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'tell-k/vim-autopep8' " 自动PEP8
+Plugin 'jiangmiao/auto-pairs' " 自动补全括号和引号等
+call vundle#end()
+" ==== Vundle ====
+
+ filetype plugin indent on
+
+" ==== themes ====
+set background=dark
+" colorscheme solarized
+colorscheme molokai
+" ==== themes ====
+
+" ==== NERDTree ====
+autocmd vimenter * NERDTree
+map <C-n> :NERDTreeToggle<CR>
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+" ==== NERDTree ====
+
+" ==== YCM ====
+let g:ycm_min_num_of_chars_for_completion = 2  "开始补全的字符数"
+let g:ycm_python_binary_path = 'python'  "jedi模块所在python解释器路径"
+let g:ycm_seed_identifiers_with_syntax = 1  "开启使用语言的一些关键字查询"
+let g:ycm_autoclose_preview_window_after_completion=1 "补全后自动关闭预览窗口"
+let g:ycm_auto_trigger = 1   "turn on
+
+nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+" ==== YCM ====
+
+" ==== ctrlp ====
+" 设置ctrlp的快捷方式 ctrp
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+" 设置ctrlp的窗口位置
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:20'
+" ==== ctrlp ====
 
