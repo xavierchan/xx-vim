@@ -82,7 +82,9 @@ set wildmode=longest:list,full
 " Enable folding with the spacebar
 nnoremap <space> za
 " 标示不必要的空白字符
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+" au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+" 透明度
+hi Normal ctermfg=252 ctermbg=none
 
 set backspace=indent,eol,start
 set magic " 设置魔术
@@ -180,6 +182,8 @@ colorscheme molokai
 " ==== themes ====
 
 " ==== NERDTree ====
+" 显示行号
+let NERDTreeShowLineNumbers=1
 autocmd vimenter * NERDTree
 map <C-n> :NERDTreeToggle<CR>
 let g:NERDTreeDirArrowExpandable = '▸'
