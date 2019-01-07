@@ -140,11 +140,32 @@ autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
 " ==== Python Settings ====
 
 " 前端代码缩进
-au BufNewFile,BufRead *.js, *.html, *.css
+au BufNewFile,BufRead *.js, *.html, *.css, *.vue
             \ set tabstop=2
             \ set softtabstop=2
             \ set shiftwidth=2
 " 前端代码缩进
+
+" ==== Eslint ====
+" show list of errors and warnings on the current file
+nmap <leader>e :Errors<CR>
+" " turn to next or previous errors, after open errors list
+nmap <leader>n :lnext<CR>
+nmap <leader>p :lprevious<CR>
+" " check also when just opened the file
+let g:syntastic_check_on_open = 1
+" let g:syntastic_javascript_checkers = ['jshint']
+let g:syntastic_javascript_checkers = ['eslint']
+" don't put icons on the sign column (it hides the vcs status icons of signify)
+let g:syntastic_enable_signs = 0
+" " custom icons (enable them if you use a patched font, and enable the previous 
+" " setting)
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_style_error_symbol = '✗'
+let g:syntastic_style_warning_symbol = '⚠'
+" ==== Eslint ====
+
 
 " ==== Vundle ====
 filetype off
@@ -167,6 +188,8 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'kien/ctrlp.vim'
 " 源码结构工具
 Plugin 'taglist.vim'
+" Vue语法高亮插件
+Plugin 'posva/vim-vue'
 Plugin 'Lokaltog/vim-powerline'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'tell-k/vim-autopep8' " 自动PEP8
@@ -225,7 +248,33 @@ let Tlist_Exit_OnlyWindow=1
 let Tlist_WinWidth=32
 " 这里比较重要了，设置ctags的位置，不是指向MacOS自带的那个，而是我们用homebrew安装的那个
 let Tlist_Ctags_Cmd='/usr/bin/ctags'
+" ==== tagslist ====
+
+" ==== 快捷键 ====
+" 关闭方向键, 强迫自己用 hjkl
+map <Left> <Nop>
+map <Right> <Nop>
+map <Up> <Nop>
+map <Down> <Nop>
+
+" 相对行号: 行号变成相对，可以用 nj/nk 进行跳转
+set relativenumber number
+au FocusLost * :set norelativenumber number
+au FocusGained * :set relativenumber
+" 插入模式下用绝对行号, 普通模式下用相对
+autocmd InsertEnter * :set norelativenumber number
+autocmd InsertLeave * :set relativenumber
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set norelativenumber number
+  else
+    set relativenumber
+  endif
+endfunc
+nnoremap <C-n> :call NumberToggle()<cr>
+
+" F1 ~ F12
 " 热键设置，我设置成Leader+t来呼出和关闭Taglist
 map <F2> :TlistToggle<CR>
-" ==== tagslist ====
+set pastetoggle=<F9>
 
