@@ -3,8 +3,8 @@
 " ==== Base Settings ====
 " 不与Vi兼容(采用Vim自己的操作命令)
 set nocompatible
-" 开启语法高亮
-syntax on
+" 共享粘贴板
+set clipboard+=unnamed
 " 左下角显示当前vim模式
 set showmode
 " 在状态栏显示正在输入的命令
@@ -15,6 +15,11 @@ set mouse=a
 set encoding=utf-8
 " 使用256色
 set t_Co=256
+" 开启语法高亮
+" if (t_Co > 2 || has("gui_running")) && !exists("syntax_on")
+syntax on
+"endif
+syntax enable
 " 开启文件类型检查
 filetype indent on
 " 自动缩进
@@ -29,8 +34,6 @@ set expandtab
 set softtabstop=4
 " 显示行号
 set nu
-" 显示光标所在的当前行的行号
-set relativenumber
 " 突出显示当前行
 set cursorline
 " 突出显示当前列
@@ -47,6 +50,9 @@ set scrolloff=7
 set laststatus=2
 " 在状态栏显示光标的当前位置
 set ruler
+highlight ColorColumn ctermbg=gray
+set colorcolumn=80
+
 
 " Search Settings
 " 括号匹配高亮
@@ -81,8 +87,6 @@ set wildmenu
 set wildmode=longest:list,full
 " Enable folding with the spacebar
 nnoremap <space> za
-" 标示不必要的空白字符
-" au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 " 透明度
 hi Normal ctermfg=252 ctermbg=none
 
@@ -117,16 +121,6 @@ set fencs=utf-8,gbk
 
 " ==== Python Settings ====
 let python_highlight_all=1
-
-" 代码缩进
-au BufNewFile,BufRead *.py
-            \ set tabstop=4
-            \ set softtabstop=4
-            \ set shiftwidth=4
-            \ set textwidth=79
-            \ set expandtab
-            \ set autoindent
-            \ set fileformat=unix
 
 autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
 
@@ -166,6 +160,9 @@ let g:syntastic_style_error_symbol = '✗'
 let g:syntastic_style_warning_symbol = '⚠'
 " ==== Eslint ====
 
+autocmd BufRead,BufNewFile Appraisals set filetype=ruby
+autocmd BufRead,BufNewFile *.md set filetype=markdown
+autocmd Syntax javascript set syntax=jquery
 
 " ==== Vundle ====
 filetype off
@@ -202,13 +199,14 @@ filetype plugin indent on
 set background=dark
 " colorscheme solarized
 colorscheme molokai
+highlight NonText guibg=#060606
+highlight Folded guibg=#0A0A0A guifg=#909090
 " ==== themes ====
 
 " ==== NERDTree ====
 " 显示行号
 let NERDTreeShowLineNumbers=1
 autocmd vimenter * NERDTree
-map <C-n> :NERDTreeToggle<CR>
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 " ==== NERDTree ====
@@ -232,8 +230,10 @@ let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:20'
 " ==== ctrlp ====
 
 " ==== tagslist ====
+" 默认开启TagList
+let Tlist_Auto_Open=1
 " 让taglist窗口出现在Vim的左边边
-let Tlist_Use_Left_Window=1
+let Tlist_Use_Right_Window=1
 " 当同时显示多个文件中的tag时，设置为1，可使taglist只显示当前文件tag，其它文件的tag都被折叠起来。
 let Tlist_File_Fold_Auto_Close=1
 " 只显示一个文件中的tag，默认为显示多个
@@ -257,24 +257,46 @@ map <Right> <Nop>
 map <Up> <Nop>
 map <Down> <Nop>
 
-" 相对行号: 行号变成相对，可以用 nj/nk 进行跳转
-set relativenumber number
-au FocusLost * :set norelativenumber number
-au FocusGained * :set relativenumber
-" 插入模式下用绝对行号, 普通模式下用相对
-autocmd InsertEnter * :set norelativenumber number
-autocmd InsertLeave * :set relativenumber
-function! NumberToggle()
-  if(&relativenumber == 1)
-    set norelativenumber number
-  else
-    set relativenumber
-  endif
-endfunc
-nnoremap <C-n> :call NumberToggle()<cr>
-
 " F1 ~ F12
 " 热键设置，我设置成Leader+t来呼出和关闭Taglist
 map <F2> :TlistToggle<CR>
 set pastetoggle=<F9>
+
+" 布局
+let NERDChristmasTree=0
+let NERDTreeWinSize=35
+let NERDTreeChDirMode=2
+let NERDTreeIgnore=['\~$', '\.pyc$', '\swp$']
+let NERDTreeShowBookmarks=1
+let NERDTreeWinPos="left"
+nmap <F5> :NERDTreeToggle<CR>
+
+let g:tagbar_width=35
+let g:tagbar_autofocus=1
+nmap <F6> :TlistToggle<CR>
+
+" 下窗口
+set wildignore+=*/tmp?*,*.so,*.swp,*.zip,*.png,*.jpg,*.jpeg,*.gif
+let g:ctrlp_custom_ignore='\v[\/]\.(git|hg|svn)$'
+
+if executable('ag')
+  " Use Ag over Grep
+  set grepprg=ag\ --nogroup\ --nocolor
+  " User ag in CtrlP for listing files.
+  let g:ctrlp_user_command='ag %s -l --nocolor -g ""'
+  " Ag is fast encough that CtrlP doesn't need to cache
+  let g:ctrlp_user_caching=0
+endif
+
+" python文件头
+autocmd BufNewFile *.py exec ":call SetPythonTitle()"
+func SetPythonTitle()
+    call setline(1, "#!/usr/bin/env python")
+    call append(line("."), "#-*- coding: utf-8 -*-")
+    call append(line(".")+1, " ")
+    call append(line(".")+2, "\# File Name:  ".expand("%"))
+    call append(line(".")+3, "\# Author: XavierChan")
+    call append(line(".")+4, "\# mail: xavierchanit@gmail.com")
+    call append(line(".")+5, "\# Created Time: ".strftime("%Y-%m-%d", localtime()))
+endfunc
 
