@@ -238,8 +238,6 @@ let Tlist_Use_Right_Window=1
 let Tlist_File_Fold_Auto_Close=1
 " 只显示一个文件中的tag，默认为显示多个
 let Tlist_Show_One_File=1
-" Tag的排序规则，以名字排序。默认是以在文件中出现的顺序排序
-let Tlist_Sort_Type='name'
 " Taglist窗口打开时，立刻切换为有焦点状态
 let Tlist_GainFocus_On_ToggleOpen=1
 " 如果taglist窗口是最后一个窗口，则退出vim
@@ -248,6 +246,7 @@ let Tlist_Exit_OnlyWindow=1
 let Tlist_WinWidth=32
 " 这里比较重要了，设置ctags的位置，不是指向MacOS自带的那个，而是我们用homebrew安装的那个
 let Tlist_Ctags_Cmd='/usr/bin/ctags'
+set tags="/usr/bin/ctags"; set autochdir
 " ==== tagslist ====
 
 " ==== 快捷键 ====
@@ -259,7 +258,6 @@ map <Down> <Nop>
 
 " F1 ~ F12
 " 热键设置，我设置成Leader+t来呼出和关闭Taglist
-map <F2> :TlistToggle<CR>
 set pastetoggle=<F9>
 
 " 布局
@@ -270,9 +268,6 @@ let NERDTreeIgnore=['\~$', '\.pyc$', '\swp$']
 let NERDTreeShowBookmarks=1
 let NERDTreeWinPos="left"
 nmap <F5> :NERDTreeToggle<CR>
-
-let g:tagbar_width=35
-let g:tagbar_autofocus=1
 nmap <F6> :TlistToggle<CR>
 
 " 下窗口
