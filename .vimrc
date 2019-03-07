@@ -1,6 +1,79 @@
 " Configuration file for vim
 
 " ==== Base Settings ====
+" 定义快捷键的前缀，即<Leader>
+let mapleader=";"
+
+" 开启文件类型侦测
+filetype on
+" 根据侦测到的不同类型加载对应的插件
+filetype plugin on
+
+" Search Settings
+" 括号匹配高亮
+set showmatch
+" 开启实时搜索功能
+set incsearch
+" 搜索时大小写不敏感
+set ignorecase
+" 关闭兼容模式
+set nocompatible
+" 命令模式下，命令自动补全
+set wildmenu
+set wildmode=longest:list,full
+" 关闭搜索高亮
+nnoremap <leader><space> :nohlsearch<CR>
+
+" 开发氛围
+" 禁止光标闪烁
+set gcr=a:block-blinkon0
+" 禁止显示滚动条
+set guioptions-=l
+set guioptions-=L
+set guioptions-=r
+set guioptions-=R
+
+" 辅助功能
+" 总是显示状态栏
+set laststatus=2
+" 显示光标当前位置
+set ruler
+" 开启行号显示
+set number
+" 高亮显示当前行/列
+set cursorline
+set cursorcolumn
+" 高亮显示搜索结果
+set hlsearch
+" 关闭自动换行
+set nowrap
+" 开启语法高亮功能
+syntax enable
+" 允许用指定语法高亮配色方案替换默认方案
+syntax on
+
+" 缩进设置
+" 自适应不同语言的智能缩进
+filetype indent on
+" 将制表符扩展为空格
+set expandtab
+" 设置编辑时制表符占用空格数
+set tabstop=4
+" 设置格式化时制表符占用空格数
+set shiftwidth=4
+" 让 vim 把连续数量的空格视为一个制表符
+set softtabstop=4
+
+" 折叠
+" 基于缩进或语法进行代码折叠
+"set foldmethod=indent
+set foldmethod=syntax
+set foldlevel=99
+" 启动 vim 时关闭折叠代码
+set nofoldenable
+
+
+
 " 不与Vi兼容(采用Vim自己的操作命令)
 set nocompatible
 " 共享粘贴板
@@ -15,54 +88,18 @@ set mouse=a
 set encoding=utf-8
 " 使用256色
 set t_Co=256
-" 开启语法高亮
-" if (t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-syntax on
-"endif
-syntax enable
-" 开启文件类型检查
-filetype indent on
 " 自动缩进
 set autoindent
-" 设置Tab键的宽度        [等同的空格个数]
-set ts=4
-" 每一次缩进对应的空格数
-set shiftwidth=4
-" 将Tab自动转化成空格[需要输入真正的Tab键时，使用 Ctrl+V + Tab]
-set expandtab
-" 按退格键时可以一次删掉 4 个空格
-set softtabstop=4
-" 显示行号
-set nu
-" 突出显示当前行
-set cursorline
-" 突出显示当前列
-set cursorcolumn
 " 设置行宽
 set textwidth=80
-" 关闭自动换行
-set nowrap
 " 特殊符号才换行(回车)
 set linebreak
 " 在上下移动光标时，光标的上方或下方至少会保留显示的行数
 set scrolloff=7
-" 是否显示状态栏
-set laststatus=2
-" 在状态栏显示光标的当前位置
-set ruler
 highlight ColorColumn ctermbg=gray
 set colorcolumn=80
 
 
-" Search Settings
-" 括号匹配高亮
-set showmatch
-" 搜索词匹配高亮
-set hlsearch
-" 输入搜索时自动匹配
-set incsearch
-" 关闭搜索高亮
-nnoremap <leader><space> :nohlsearch<CR>
 
 " Edit Settings
 " 英文单词拼写检查
@@ -82,9 +119,6 @@ set noerrorbells
 " 显示行尾多余空格
 set listchars=tab:»■,trail:■
 set list
-" 命令模式下，命令自动补全
-set wildmenu
-set wildmode=longest:list,full
 " Enable folding with the spacebar
 nnoremap <space> za
 " 透明度
@@ -93,8 +127,6 @@ hi Normal ctermfg=252 ctermbg=none
 set backspace=indent,eol,start
 set magic " 设置魔术
 " 折叠
-set foldmethod=indent
-set foldlevel=99
 " 设置标记一列的背景颜色和数字一行颜色一致
 hi! link SignColumn   LineNr
 
@@ -124,13 +156,6 @@ let python_highlight_all=1
 
 autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
 
- map <F5> :call RunPython()<CR>
- func! RunPython()
-     exec "W"
-     if &filetype == 'python'
-         exec "!time python2.7 %"
-     endif
- endfunc
 " ==== Python Settings ====
 
 " 前端代码缩进
@@ -191,6 +216,7 @@ Plugin 'Lokaltog/vim-powerline'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'tell-k/vim-autopep8' " 自动PEP8
 Plugin 'jiangmiao/auto-pairs' " 自动补全括号和引号等
+Plugin 'nathanaelkane/vim-indent-guides' " 缩进格式化呈现
 call vundle#end()
 filetype plugin indent on
 " ==== Vundle ====
@@ -198,10 +224,23 @@ filetype plugin indent on
 " ==== themes ====
 set background=dark
 " colorscheme solarized
+" colorscheme phd
 colorscheme molokai
 highlight NonText guibg=#060606
 highlight Folded guibg=#0A0A0A guifg=#909090
 " ==== themes ====
+
+" ==== vim-indent-guides ====
+" 随 vim 自启动
+let g:indent_guides_enable_on_vim_startup=1
+" 从第二层开始可视化显示缩进
+let g:indent_guides_start_level=2
+" 色块宽度
+let g:indent_guides_guide_size=1
+" 快捷键 i 开/关缩进可视化
+:nmap <silent> <Leader>i <Plug>IndentGuidesToggle
+" ==== vim-indent-guides ====
+
 
 " ==== NERDTree ====
 " 显示行号
@@ -255,10 +294,30 @@ map <Left> <Nop>
 map <Right> <Nop>
 map <Up> <Nop>
 map <Down> <Nop>
+" 跳转至右方的窗口
+nnoremap <Leader>lw <C-W>l
+" 跳转至左方的窗口
+nnoremap <Leader>hw <C-W>h
+" 跳转至上方的子窗口
+nnoremap <Leader>kw <C-W>k
+" 跳转至下方的子窗口
+nnoremap <Leader>jw <C-W>j
+" 定义快捷键在结对符之间跳转
+nmap <Leader>M %
 
 " F1 ~ F12
 " 热键设置，我设置成Leader+t来呼出和关闭Taglist
 set pastetoggle=<F9>
+" 将外部命令 wmctrl 控制窗口最大化的命令行参数封装成一个 vim 的函数
+fun! ToggleFullscreen()
+    call system("wmctrl -ir " . v:windowid . " -b toggle,fullscreen")
+endf
+" 全屏开/关快捷键
+map <silent> <F11> :call ToggleFullscreen()<CR>
+" 启动 vim 时自动全屏
+autocmd VimEnter * call ToggleFullscreen()
+
+
 
 " 布局
 let NERDChristmasTree=0
@@ -284,14 +343,17 @@ if executable('ag')
 endif
 
 " python文件头
-autocmd BufNewFile *.py exec ":call SetPythonTitle()"
-func SetPythonTitle()
-    call setline(1, "#!/usr/bin/env python")
-    call append(line("."), "#-*- coding: utf-8 -*-")
-    call append(line(".")+1, " ")
-    call append(line(".")+2, "\# File Name:  ".expand("%"))
-    call append(line(".")+3, "\# Author: XavierChan")
-    call append(line(".")+4, "\# mail: xavierchanit@gmail.com")
-    call append(line(".")+5, "\# Created Time: ".strftime("%Y-%m-%d", localtime()))
-endfunc
+"autocmd BufNewFile *.py exec ":call SetPythonTitle()"
+"func SetPythonTitle()
+"    call setline(1, "#!/usr/bin/env python")
+"    call append(line("."), "#-*- coding: utf-8 -*-")
+"    call append(line(".")+1, " ")
+"    call append(line(".")+2, "\# File Name:  ".expand("%"))
+"    call append(line(".")+3, "\# Author: XavierChan")
+"    call append(line(".")+4, "\# mail: xavierchanit@gmail.com")
+"    call append(line(".")+5, "\# Created Time: ".strftime("%Y-%m-%d", localtime()))
+"endfunc
+
+" 让配置变更立即生效
+autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
