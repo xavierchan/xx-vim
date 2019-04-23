@@ -198,6 +198,7 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 " 目前最强自动补全
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'klen/python-mode'
 " 文件浏览
 Plugin 'scrooloose/nerdtree'
 " 语法检查
@@ -217,6 +218,9 @@ Plugin 'vim-scripts/indentpython.vim'
 Plugin 'tell-k/vim-autopep8' " 自动PEP8
 Plugin 'jiangmiao/auto-pairs' " 自动补全括号和引号等
 Plugin 'nathanaelkane/vim-indent-guides' " 缩进格式化呈现
+" markdown
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
 call vundle#end()
 filetype plugin indent on
 " ==== Vundle ====
@@ -226,9 +230,42 @@ set background=dark
 " colorscheme solarized
 " colorscheme phd
 colorscheme molokai
-highlight NonText guibg=#060606
-highlight Folded guibg=#0A0A0A guifg=#909090
+"highlight NonText guibg=#060606
+"highlight Folded guibg=#0A0A0A guifg=#909090
+let g:molokai_original = 1
+let g:rehash256 = 1
 " ==== themes ====
+
+" ==== python-mode ====
+let g:pymode_options = 1
+let g:pymode_trim_whitespaces = 1
+let g:pymode_options_colorcolumn = 1
+let g:pymode_indent = 1
+let g:pymode_virtualenv = 1
+"启用python语法检查
+let g:pymode_lint = 1
+"修改后保存时进行检查
+let g:pymode_lint_on_write = 0
+"编辑时进行检查
+let g:pymode_lint_on_fly = 0
+let g:pymode_lint_checkers = ['pyflakes', 'pep8']
+"不在父目录下查找.ropeproject，能提升响应速度
+let g:pymode_rope_lookup_project = 0
+"开启补全，并设置<C-Tab>为默认快捷键
+let g:pymode_rope_completion = 1
+let g:pymode_rope_complete_on_dot = 1
+let g:pymode_rope_completion_bind = '<C-Tab>'
+"<C-c>g跳转到定义处，同时新建竖直窗口打开
+let g:pymode_rope_goto_definition_bind = '<C-c>g'
+let g:pymode_rope_goto_definition_cmd = 'vnew'
+"开启python所有的语法高亮
+let g:pymode_syntax = 1
+let g:pymode_syntax_all = 1
+"高亮缩进错误
+let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+"高亮空格错误
+let g:pymode_syntax_space_errors = g:pymode_syntax_all
+"
 
 " ==== vim-indent-guides ====
 " 随 vim 自启动
@@ -270,7 +307,7 @@ let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:20'
 
 " ==== tagslist ====
 " 默认开启TagList
-let Tlist_Auto_Open=1
+let Tlist_Auto_Open=0
 " 让taglist窗口出现在Vim的左边边
 let Tlist_Use_Right_Window=1
 " 当同时显示多个文件中的tag时，设置为1，可使taglist只显示当前文件tag，其它文件的tag都被折叠起来。
@@ -317,6 +354,11 @@ map <silent> <F11> :call ToggleFullscreen()<CR>
 " 启动 vim 时自动全屏
 autocmd VimEnter * call ToggleFullscreen()
 
+" 搜索窗快捷键
+"fun! ToggleQuickFix()
+"    call system("wmctrl -ir " . v:windowid . " -b toggle,fullscreen")
+"endf
+"autocmd VimEnter * call ToggleQuickFix()
 
 
 " 布局
