@@ -1,1 +1,1 @@
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+curl https://github.com/xavierchan/xx-vim/blob/master/install.sh > xx-vim.sh && sh xx-vim.sh
